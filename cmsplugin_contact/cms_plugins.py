@@ -37,11 +37,15 @@ class ContactPlugin(CMSPluginBase):
         Returns the Django form Widget to be used for
         the text area
         """
-        if USE_TINYMCE and "tinymce" in settings.INSTALLED_APPS:
-            from cms.plugins.text.widgets.tinymce_widget import TinyMCEEditor
-            return TinyMCEEditor(installed_plugins=plugins)
-        else:
-            return WYMEditor(installed_plugins=plugins)
+        try:
+            from djangocms_text_ckeditor.widgets import TextEditorWidget
+            return TextEditorWidget(installed_plugins=plugins)
+        except:
+            if USE_TINYMCE and "tinymce" in settings.INSTALLED_APPS:
+                from cms.plugins.text.widgets.tinymce_widget import TinyMCEEditor
+                return TinyMCEEditor(installed_plugins=plugins)
+            else:
+                return WYMEditor(installed_plugins=plugins)
 
     def get_form_class(self, request, plugins):
         """
